@@ -1,0 +1,30 @@
+name: Java CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Start SUT
+        run: |
+          java -jar ./artifacts/app-mbank.jar &
+          sleep 5
+
+      - name: Run tests
+        run: ./gradlew test
